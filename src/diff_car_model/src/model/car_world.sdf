@@ -1,0 +1,787 @@
+<sdf version='1.10'>
+  <world name='car_world'>
+    <physics name='1ms' type='ignored'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
+    <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system'/>
+    <plugin name='gz::sim::systems::SceneBroadcaster' filename='gz-sim-scene-broadcaster-system'/>
+    <plugin name='gz::sim::systems::Sensors' filename='gz-sim-sensors-system'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name='gz::sim::systems::Imu' filename='gz-sim-imu-system'/>
+    <plugin name='gz::sim::systems::TriggeredPublisher' filename='gz-sim-triggered-publisher-system'>
+      <input type='gz.msgs.Int32' topic='/keyboard/keypress'>
+        <match field='data'>16777234</match>
+      </input>
+      <output type='gz.msgs.Twist' topic='/cmd_vel'>linear: {x: 0.0}, angular: {z: 0.5}</output>
+    </plugin>
+    <plugin name='gz::sim::systems::TriggeredPublisher' filename='gz-sim-triggered-publisher-system'>
+      <input type='gz.msgs.Int32' topic='/keyboard/keypress'>
+        <match field='data'>16777235</match>
+      </input>
+      <output type='gz.msgs.Twist' topic='/cmd_vel'>linear: {x: 0.5}, angular: {z: 0.0}</output>
+    </plugin>
+    <plugin name='gz::sim::systems::TriggeredPublisher' filename='gz-sim-triggered-publisher-system'>
+      <input type='gz.msgs.Int32' topic='/keyboard/keypress'>
+        <match field='data'>16777236</match>
+      </input>
+      <output type='gz.msgs.Twist' topic='/cmd_vel'>linear: {x: 0.0}, angular: {z: -0.5}</output>
+    </plugin>
+    <plugin name='gz::sim::systems::TriggeredPublisher' filename='gz-sim-triggered-publisher-system'>
+      <input type='gz.msgs.Int32' topic='/keyboard/keypress'>
+        <match field='data'>16777237</match>
+      </input>
+      <output type='gz.msgs.Twist' topic='/cmd_vel'>linear: {x: -0.5}, angular: {z: 0.0}</output>
+    </plugin>
+    <gravity>0 0 -9.8000000000000007</gravity>
+    <magnetic_field>5.5644999999999998e-06 2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <scene>
+      <ambient>0.400000006 0.400000006 0.400000006 1</ambient>
+      <background>0.699999988 0.699999988 0.699999988 1</background>
+      <shadows>true</shadows>
+    </scene>
+    <include>
+      <uri>
+      https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane
+      </uri>
+    </include>
+    <model name='sam_bot'>
+      <link name='base_link'>
+        <inertial>
+          <pose>0.020097270790626631 0 0.032959524096627682 0 0 0</pose>
+          <mass>1.2439499999999999</mass>
+          <inertia>
+            <ixx>7.690787659512039</ixx>
+            <ixy>0</ixy>
+            <ixz>-0.0094260118975843105</ixz>
+            <iyy>7.9825232277422726</iyy>
+            <iyz>0</iyz>
+            <izz>0.48251856823023442</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>2 1 0.75</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+          </surface>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__lidar_link_collision_1'>
+          <pose>0.25 0 0.40999999999999998 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.070000000000000007</length>
+              <radius>0.14999999999999999</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+          </surface>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>2 1 0.75</size>
+            </box>
+          </geometry>
+          <material>
+            <diffuse>0 0 1 1</diffuse>
+            <ambient>0 0 1 1</ambient>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__lidar_link_visual_1'>
+          <pose>0.25 0 0.40999999999999998 0 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.070000000000000007</length>
+              <radius>0.14999999999999999</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <diffuse>0 1 0 1</diffuse>
+            <ambient>0 1 0 1</ambient>
+          </material>
+        </visual>
+        <sensor name='imu_sensor' type='imu'>
+          <pose>0 0 0 0 0 0</pose>
+          <topic>base_imu</topic>
+          <update_rate>100</update_rate>
+          <enable_metrics>true</enable_metrics>
+          <visualize>true</visualize>
+          <imu>
+            <orientation_reference_frame>
+              <localization>CUSTOM</localization>
+              <custom_rpy>0 0 0</custom_rpy>
+              <grav_dir_x>1 0 0</grav_dir_x>
+            </orientation_reference_frame>
+            <angular_velocity>
+              <x>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.00020000000000000001</stddev>
+                  <bias_mean>7.5000000000000002e-06</bias_mean>
+                  <bias_stddev>7.9999999999999996e-07</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </x>
+              <y>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.00020000000000000001</stddev>
+                  <bias_mean>7.5000000000000002e-06</bias_mean>
+                  <bias_stddev>7.9999999999999996e-07</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </y>
+              <z>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.00020000000000000001</stddev>
+                  <bias_mean>7.5000000000000002e-06</bias_mean>
+                  <bias_stddev>7.9999999999999996e-07</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </z>
+            </angular_velocity>
+            <linear_acceleration>
+              <x>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.017000000000000001</stddev>
+                  <bias_mean>0.10000000000000001</bias_mean>
+                  <bias_stddev>0.001</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </x>
+              <y>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.017000000000000001</stddev>
+                  <bias_mean>0.10000000000000001</bias_mean>
+                  <bias_stddev>0.001</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </y>
+              <z>
+                <noise type='gaussian'>
+                  <mean>0</mean>
+                  <stddev>0.017000000000000001</stddev>
+                  <bias_mean>0.10000000000000001</bias_mean>
+                  <bias_stddev>0.001</bias_stddev>
+                  <dynamic_bias_stddev>0</dynamic_bias_stddev>
+                  <dynamic_bias_correlation_time>0</dynamic_bias_correlation_time>
+                  <precision>0</precision>
+                </noise>
+              </z>
+            </linear_acceleration>
+            <enable_orientation>true</enable_orientation>
+          </imu>
+        </sensor>
+        <sensor name='lidar' type='gpu_lidar'>
+          <pose>0.25 0 0.40999999999999998 0 0 0</pose>
+          <topic>base_lidar</topic>
+          <update_rate>30</update_rate>
+          <enable_metrics>false</enable_metrics>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>640</samples>
+                <resolution>1</resolution>
+                <min_angle>-2.6179963000000002</min_angle>
+                <max_angle>2.6179963000000002</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>16</samples>
+                <min_angle>-0.261799</min_angle>
+                <max_angle>0.261799</max_angle>
+                <resolution>1</resolution>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.12</min>
+              <max>3.5</max>
+              <resolution>0.014999999999999999</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+            <visibility_mask>4294967295</visibility_mask>
+          </lidar>
+        </sensor>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <joint name='caster_joint' type='revolute'>
+        <pose>0 0 0 0 0 0</pose>
+        <parent>base_link</parent>
+        <child>front_caster</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+            <effort>inf</effort>
+            <velocity>inf</velocity>
+            <stiffness>100000000</stiffness>
+            <dissipation>1</dissipation>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='front_caster'>
+        <pose>0.65400000000000003 0 -0.375 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.016</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.016</iyy>
+            <iyz>0</iyz>
+            <izz>0.016</izz>
+          </inertia>
+        </inertial>
+        <collision name='front_caster_collision'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.075000000000000011</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='front_caster_visual'>
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.075000000000000011</radius>
+            </sphere>
+          </geometry>
+          <material>
+            <diffuse>1 0 0 1</diffuse>
+            <ambient>1 0 0 1</ambient>
+          </material>
+        </visual>
+        <enable_wind>false</enable_wind>
+      </link>
+      <joint name='drivewhl_l_joint' type='revolute'>
+        <pose>0 0 0 0 0 0</pose>
+        <parent>base_link</parent>
+        <child>drivewhl_l_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+            <effort>inf</effort>
+            <velocity>inf</velocity>
+            <stiffness>100000000</stiffness>
+            <dissipation>1</dissipation>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='drivewhl_l_link'>
+        <pose>-0.75 0.59999999999999998 -0.049999999999999989 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.043333000000000003</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.043333000000000003</iyy>
+            <iyz>0</iyz>
+            <izz>0.080000000000000002</izz>
+          </inertia>
+        </inertial>
+        <collision name='drivewhl_l_link_fixed_joint_lump__collision_collision'>
+          <pose>0 0 0 1.5707963267948959 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.20000000000000001</length>
+              <radius>0.40000000000000002</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='drivewhl_l_link_visual'>
+          <pose>0 0 0 1.5707963267948959 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.20000000000000001</length>
+              <radius>0.40000000000000002</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <diffuse>0.625 0.625 0.625 1</diffuse>
+            <ambient>0.625 0.625 0.625 1</ambient>
+          </material>
+        </visual>
+        <enable_wind>false</enable_wind>
+      </link>
+      <joint name='drivewhl_r_joint' type='revolute'>
+        <pose>0 0 0 0 0 0</pose>
+        <parent>base_link</parent>
+        <child>drivewhl_r_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+            <effort>inf</effort>
+            <velocity>inf</velocity>
+            <stiffness>100000000</stiffness>
+            <dissipation>1</dissipation>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name='drivewhl_r_link'>
+        <pose>-0.75 -0.59999999999999998 -0.049999999999999989 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.043333000000000003</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.043333000000000003</iyy>
+            <iyz>0</iyz>
+            <izz>0.080000000000000002</izz>
+          </inertia>
+        </inertial>
+        <collision name='drivewhl_r_link_fixed_joint_lump__collision_collision'>
+          <pose>0 0 0 1.5707963267948959 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.20000000000000001</length>
+              <radius>0.40000000000000002</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='drivewhl_r_link_visual'>
+          <pose>0 0 0 1.5707963267948959 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.20000000000000001</length>
+              <radius>0.40000000000000002</radius>
+            </cylinder>
+          </geometry>
+          <material>
+            <diffuse>0.625 0.625 0.625 1</diffuse>
+            <ambient>0.625 0.625 0.625 1</ambient>
+          </material>
+        </visual>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 0 0.45000000000000001 0 0 0</pose>
+      <plugin name='gz::sim::systems::DiffDrive' filename='gz-sim-diff-drive-system'>
+        <left_joint>drivewhl_l_joint</left_joint>
+        <right_joint>drivewhl_r_joint</right_joint>
+        <wheel_separation>1.2</wheel_separation>
+        <wheel_radius>0.4</wheel_radius>
+        <tf_topic>/diff_drive/tf</tf_topic>
+        <topic>cmd_vel</topic>
+        <odom_publish_frequency>30</odom_publish_frequency>
+        <frame_id>odom</frame_id>
+        <child_frame_id>base_link</child_frame_id>
+      </plugin>
+      <frame name='base_joint' attached_to='base_link'>
+        <pose>0 0 -0.45000000000000001 0 0 0</pose>
+      </frame>
+      <frame name='base_footprint' attached_to='base_joint'>
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name='lidar_joint' attached_to='base_link'>
+        <pose>0.25 0 0.40999999999999998 0 0 0</pose>
+      </frame>
+      <frame name='lidar_link' attached_to='lidar_joint'>
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder'>
+      <pose>4.5723122143268089 1.3301026188932135 0.49999999631413172 -1.0885859147007946e-17 -3.8078934486479766e-17 9.6893384273000313e-19</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder_0'>
+      <pose>-1.459016471739587 3.2579329081134261 0.49999999631413172 8.5460569882317396e-18 -6.238983927492342e-18 -8.9316784853412828e-19</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder_1'>
+      <pose>2.037931314455709 4.2211400960125349 0.5 0 0 0</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder_4'>
+      <pose>5.276351264008051 4.8597276143791728 0.5 0 0 0</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder_6'>
+      <pose>6.005584864553585 -1.9891844637127059 0.5 0 0 0</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='cylinder_7'>
+      <pose>0.72543870782264541 -5.3885426042941047 0.5 0 0 0</pose>
+      <link name='cylinder_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.14580000000000001</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.14580000000000001</iyy>
+            <iyz>0</iyz>
+            <izz>0.125</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='cylinder_collision'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='cylinder_visual'>
+          <geometry>
+            <cylinder>
+              <radius>0.5</radius>
+              <length>1</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <light name='sun' type='directional'>
+      <pose>0 0 10 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>-0.5 0.10000000000000001 -0.90000000000000002</direction>
+      <diffuse>0.800000012 0.800000012 0.800000012 1</diffuse>
+      <specular>0.200000003 0.200000003 0.200000003 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <linear>0.0099999997764825821</linear>
+        <constant>0.89999997615814209</constant>
+        <quadratic>0.0010000000474974513</quadratic>
+      </attenuation>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+  </world>
+</sdf>

@@ -1,0 +1,11 @@
+- ros_topic_name: "tf"
+  gz_topic_name: "diff_drive/tf"
+  ros_type_name: "tf2_msgs/msg/TFMessage"
+  gz_type_name: "gz.msgs.Pose_V"
+  # subscriber_queue: 5 # Default 10
+  # publisher_queue: 6 # Default 10
+  # lazy: true # Default "false"
+  direction:
+  # BIDIRECTIONAL # Default "BIDIRECTIONAL" - Bridge both directions
+  "GZ_TO_ROS"  #Bridge Gz topic to ROS
+  # "ROS_TO_GZ" - #Bridge ROS topic to Gz
