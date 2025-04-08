@@ -10,6 +10,8 @@ def generate_launch_description():
     pkg_share = launch_ros.substitutions.FindPackageShare(package='diff_car_model').find('diff_car_model')
     default_model_path = os.path.join(pkg_share, 'src/model/diff_car_description.urdf')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/nav2_config.rviz')
+    nav2_params = os.path.join(pkg_share, 'config/nav2_params_diff.yaml')
+    pregen_map = os.path.join(pkg_share, 'config/map_one.yaml')
 
     robot_state_publisher_node = launch_ros.actions.Node(
         package='robot_state_publisher',
@@ -78,7 +80,8 @@ def generate_launch_description():
     ros_gz_bridge_tf = launch_ros.actions.Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_bridge_tf.yaml"],
+            # arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_bridge_tf.yaml"],
+            arguments=["diff_drive/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V"],
             remappings=[],
             output='screen',
             parameters=[{'use_sim_time' : True}]
@@ -87,7 +90,8 @@ def generate_launch_description():
     ros_gz_bridge_clock = launch_ros.actions.Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_clock.yaml"],
+            # arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_clock.yaml"],
+            arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
             remappings=[],
             output='screen',
             parameters=[{'use_sim_time' : True}]
@@ -125,7 +129,16 @@ def generate_launch_description():
        name='static_transform_publisher',
        output='screen',
        arguments=["0", "0", "0", "0", "0", "0", "base_link", "sam_bot/base_link/imu_sensor"],
-            parameters=[{'use_sim_time' : True}]
+        parameters=[{'use_sim_time' : True}]
+    )
+
+    # Map Server Node
+    map_server = launch_ros.actions.Node(
+        package='nav2_map_server',
+        executable='map_server',
+        name='map_server',
+        output='screen',
+        parameters=[{'yaml_filename' : LaunchConfiguration('map')}]
     )
 
 
@@ -145,7 +158,22 @@ def generate_launch_description():
             default_value=gz_world_path,
             description='World to load into Gazebo'
         ),
+
+                
+        launch.actions.DeclareLaunchArgument(
+            'nav2_params',
+            default_value=nav2_params,
+            description='NAV2 paramaters'
+        ),
+
+        launch.actions.DeclareLaunchArgument(
+            'map',
+            default_value=pregen_map,
+            description='Pre-generated map'
+        ),
+        
         launch.actions.SetLaunchConfiguration(name='world_file', value=[LaunchConfiguration('world')]),
+        launch.actions.SetLaunchConfiguration(name='nav2_params_file', value=[LaunchConfiguration('nav2_params')]),
         launch.actions.SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', gz_model_path),
         launch.actions.IncludeLaunchDescription( 
             PythonLaunchDescriptionSource(gz_launch_path),
@@ -159,9 +187,11 @@ def generate_launch_description():
             launch_arguments={
                 'use_sim_time' : "True",
                 'use_localization' : "True",
-                'params_file' : '/home/shubh/diff_drive_car/diff_car_model/config/nav2_params_diff.yaml'
+                'params_file' : LaunchConfiguration('nav2_params_file')
             }.items(),
         ),
+
+
         joint_state_publisher_node,
         # joint_state_publisher_gui_node,
         robot_state_publisher_node,
@@ -175,4 +205,5 @@ def generate_launch_description():
         robot_localization_node,
         broadcast_tf_static_lidar,
         broadcast_tf_static_imu,
+        map_server
     ])

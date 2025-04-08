@@ -41,7 +41,7 @@ ros2 launch diff_car_model map.launch.py
 2. **Launch SLAM Toolbox** in a separate terminal:
 
 ```bash
-ros2 launch slam_toolbox online_async_launch.py use_sim_time:=True slam_params_file:=~/ros2_ws/src/diff_car_model/config/slam_toolbox.yaml
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=True slam_params_file:=$PWD/src/diff_car_model/config/slam_toolbox.yaml
 ```
 
 3. **Control the robot manually**: In another terminal, use the `teleop_twist_keyboard` package to drive the robot in the Gazebo simulation:

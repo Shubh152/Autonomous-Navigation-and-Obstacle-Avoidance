@@ -78,7 +78,8 @@ def generate_launch_description():
     ros_gz_bridge_tf = launch_ros.actions.Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_bridge_tf.yaml"],
+            # arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_bridge_tf.yaml"],
+            arguments=["diff_drive/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V"],
             remappings=[],
             output='screen',
             parameters=[{'use_sim_time' : True}]
@@ -87,7 +88,8 @@ def generate_launch_description():
     ros_gz_bridge_clock = launch_ros.actions.Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
-            arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_clock.yaml"],
+            # arguments=["--ros-args", "-p", "config_file:=/home/shubh/diff_drive_car/diff_car_model/config/ros_gz_clock.yaml"],
+            arguments=["/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"],
             remappings=[],
             output='screen',
             parameters=[{'use_sim_time' : True}]
@@ -130,13 +132,6 @@ def generate_launch_description():
 
 
     return launch.LaunchDescription([
-        
-        ros_gz_bridge_clock,
-        ros_gz_bridge_lidar,
-        ros_gz_bridge_imu,
-        ros_gz_bridge_odom,
-        ros_gz_bridge_tf,
-        ros_gz_bridge_teleop,
 
         launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
                                             description='Flag to enable joint_state_publisher_gui'),
@@ -172,8 +167,14 @@ def generate_launch_description():
         joint_state_publisher_node,
         # joint_state_publisher_gui_node,
         robot_state_publisher_node,
+        rviz_node,
+        ros_gz_bridge_lidar,
+        ros_gz_bridge_imu,
+        ros_gz_bridge_odom,
+        ros_gz_bridge_tf,
+        ros_gz_bridge_teleop,
+        ros_gz_bridge_clock,
         robot_localization_node,
         broadcast_tf_static_lidar,
         broadcast_tf_static_imu,
-        rviz_node,
     ])
